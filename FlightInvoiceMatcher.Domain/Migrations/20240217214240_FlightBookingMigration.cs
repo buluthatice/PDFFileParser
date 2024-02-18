@@ -15,11 +15,13 @@ namespace FlightInvoiceMatcher.Domain.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    FlightNumber = table.Column<int>(type: "int", maxLength: 10, nullable: false),
-                    FlightDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     BookingId = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CarrierCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    FlightNumber = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    FlightDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Origin = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Destination = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
@@ -27,7 +29,7 @@ namespace FlightInvoiceMatcher.Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bookings", x => new { x.FlightDate, x.FlightNumber });
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
                 });
         }
 

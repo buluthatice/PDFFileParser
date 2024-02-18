@@ -4,6 +4,7 @@ using FlightInvoiceMatcher.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightInvoiceMatcher.Domain.Migrations
 {
     [DbContext(typeof(FlightBookingDbContext))]
-    partial class FlightBookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240217215452_FlightBookingMigration_V2")]
+    partial class FlightBookingMigration_V2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

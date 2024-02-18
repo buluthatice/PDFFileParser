@@ -7,6 +7,9 @@ namespace FlightInvoiceMatcher.Domain.Models;
 [Table("Bookings")]
 public class BookingDbModel
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     [Required]
     [MaxLength(10)]
     public required string BookingId { get; set; }
@@ -20,7 +23,7 @@ public class BookingDbModel
     [MaxLength(10)]
     public int FlightNumber { get; set; }
     [Required]
-    public DateTimeOffset FlightDate { get; set; }
+    public DateTime FlightDate { get; set; }
     [Required]
     [MaxLength(10)]
     public required string Origin { get; set; }
@@ -29,5 +32,6 @@ public class BookingDbModel
     public required string Destination { get; set; }
     [Required]
     public decimal Price { get; set; }
+    [MaxLength(10)]
     public string? InvoiceNumber { get; set; }
 }

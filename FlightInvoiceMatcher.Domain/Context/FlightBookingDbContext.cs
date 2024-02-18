@@ -11,7 +11,5 @@ public class FlightBookingDbContext(DbContextOptions<FlightBookingDbContext> opt
         modelBuilder.Entity<BookingDbModel>()
             .Property(b => b.Price)
             .HasPrecision(18, 2);
-        modelBuilder.Entity<BookingDbModel>()
-        .HasKey(b => new { b.FlightDate, b.FlightNumber });
     }
 }

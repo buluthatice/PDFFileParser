@@ -19,6 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FlightInvoiceMatcher.Domain\FlightInvoiceMatcher.Domain.csproj" />
-    <ProjectReference Include="..\InvoicePdfFileReader\InvoicePdfFileReader.csproj" />
+    <ProjectReference Include="..\InvoicePdfFileReader\FlightInvoiceMatcher.InvoicePdfFileReader.csproj" />
   </ItemGroup>
 </Project>

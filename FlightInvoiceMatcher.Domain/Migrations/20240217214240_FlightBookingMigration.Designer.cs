@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightInvoiceMatcher.Domain.Migrations
 {
     [DbContext(typeof(FlightBookingDbContext))]
-    [Migration("20240217195420_FlightBookingMigration")]
+    [Migration("20240217214240_FlightBookingMigration")]
     partial class FlightBookingMigration
     {
         /// <inheritdoc />
@@ -27,12 +27,11 @@ namespace FlightInvoiceMatcher.Domain.Migrations
 
             modelBuilder.Entity("FlightInvoiceMatcher.Domain.Models.BookingDbModel", b =>
                 {
-                    b.Property<DateTimeOffset>("FlightDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("FlightNumber")
-                        .HasMaxLength(10)
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BookingId")
                         .IsRequired()
@@ -54,6 +53,13 @@ namespace FlightInvoiceMatcher.Domain.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<DateTimeOffset>("FlightDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("FlightNumber")
+                        .HasMaxLength(10)
+                        .HasColumnType("int");
+
                     b.Property<string>("InvoiceNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -66,7 +72,7 @@ namespace FlightInvoiceMatcher.Domain.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("FlightDate", "FlightNumber");
+                    b.HasKey("Id");
 
                     b.ToTable("Bookings");
                 });
