@@ -2,6 +2,6 @@
 
 public class InvoiceFileWatcherSettings
 {
-    public string FolderPath { get; set; }
-    public string FileFilter { get; set; }
+    public required string FolderPath { get; set; }
+    public required string FileFilter { get; set; }
 }

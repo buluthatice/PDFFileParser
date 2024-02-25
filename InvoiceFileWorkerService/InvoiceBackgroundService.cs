@@ -2,11 +2,11 @@ using InvoiceFileWorkerService.FileWatcher;
 
 namespace InvoiceFileWorkerService;
 
-public class Worker(ILogger<Worker> logger, IFileWatcherService fileWatcherService) : BackgroundService
+public class InvoiceBackgroundService(ILogger<InvoiceBackgroundService> logger, IFileWatcherService fileWatcherService) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        await fileWatcherService.WatchInvoiceFolder(cancellationToken);
+        await fileWatcherService.WatchInvoiceFolderAsync(cancellationToken);
     }
     public override async Task StopAsync(CancellationToken cancellationToken)
     {

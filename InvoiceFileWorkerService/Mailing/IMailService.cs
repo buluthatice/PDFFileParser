@@ -1,6 +1,8 @@
-﻿namespace FlightInvoiceMatcher.MailService;
+﻿using FlightInvoiceMatcher.Domain.Models;
+
+namespace FlightInvoiceMatcher.MailService;
 
 public interface IMailService
 {
-    Task SendMailAsync();
+    Task SendMailAsync(List<FlightItemModel> unmatchedFlightItemModels, List<FlightItemModel> duplicatedFlightItemModels, List<FlightItemModel> differentPricedFlightItemModels, List<FlightItemModel> matchedFlightItemModels);
 }

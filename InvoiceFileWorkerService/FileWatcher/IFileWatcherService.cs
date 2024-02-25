@@ -2,5 +2,5 @@
 
 public interface IFileWatcherService
 {
-    Task WatchInvoiceFolder(CancellationToken cancellationToken);
+    Task WatchInvoiceFolderAsync(CancellationToken cancellationToken);
 }

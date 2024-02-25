@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace FlightInvoiceMatcher.Domain.Models;

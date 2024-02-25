@@ -86,22 +86,23 @@ public class InvoiceFileReadingService(ILogger<IInvoiceFileReadingService> logge
             return null;
         }
 
-        if (!int.TryParse(items[seatIndex].Replace("-", ""), out var seat))
+        if (int.TryParse(items[seatIndex].Replace("-", ""), out var seat))
         {
-            logger.LogError("Could not parse seat from invoice item line. Seat: {Seat}, Line: {InvoiceItemLine}", items[seatIndex], invoiceItemLine);
-            return null;
+            return new()
+            {
+                Season = items[seasonIndex],
+                Date = date,
+                FlightNumber = $"{items[flightNumberPart1Index]} {items[flightNumberPart2Index]}",
+                Routing = $"{items[routingPart1Index]} {items[routingPart2Index]}",
+                Seat = seat,
+                SeatPrice = ConvertToDecimal(items[priceIndex]),
+                TotalPrice = ConvertToDecimal(items[totalPriceIndex])
+            };
         }
 
-        return new()
-        {
-            Season = items[seasonIndex],
-            Date = date,
-            FlightNumber = $"{items[flightNumberPart1Index]} {items[flightNumberPart2Index]}",
-            Routing = $"{items[routingPart1Index]} {items[routingPart2Index]}",
-            Seat = seat,
-            SeatPrice = ConvertToDecimal(items[priceIndex]),
-            TotalPrice = ConvertToDecimal(items[totalPriceIndex])
-        };
+        logger.LogError("Could not parse seat from invoice item line. Seat: {Seat}, Line: {InvoiceItemLine}", items[seatIndex], invoiceItemLine);
+        return null;
+
     }
 
     private static decimal ConvertToDecimal(string priceValue)
