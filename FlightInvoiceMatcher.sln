@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightInvoiceMatcher.Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightInvoiceMatcher.InvoicePdfFileReader", "InvoicePdfFileReader\FlightInvoiceMatcher.InvoicePdfFileReader.csproj", "{686BEACC-F74D-498E-9E9C-39959D7004A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightInvoiceMatcherTest", "FlightInvoiceMatcherTest\FlightInvoiceMatcherTest.csproj", "{E0DCE199-2CDC-4ECE-855C-7956BA3AD8B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightInvoiceMatcherTest", "FlightInvoiceMatcherTest\FlightInvoiceMatcherTest.csproj", "{E0DCE199-2CDC-4ECE-855C-7956BA3AD8B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
