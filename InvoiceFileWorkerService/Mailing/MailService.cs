@@ -25,13 +25,17 @@ public class MailService(ILogger<IMailService> logger, IOptions<MailSettings> ma
         try
         {
             await smtp.SendMailAsync(message);
+            logger.LogInformation("Mail sent.");
         }
         catch (Exception e)
         {
-            logger.LogError($"During mail sending an error occured, {e.Message}");
+            logger.LogError("During mail sending an error occured, {message}", e.Message);
             throw;
         }
-
+        finally
+        {
+            smtp.Dispose();
+        }
     }
 
     private static Attachment CreateAttachment(List<FlightItemModel> flightItemModels, string attachmentName)

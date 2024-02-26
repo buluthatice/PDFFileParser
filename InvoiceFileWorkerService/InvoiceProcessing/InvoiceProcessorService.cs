@@ -5,11 +5,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FlightInvoiceMatcher.WorkerService.InvoiceProcessing;
 
-public class InvoiceProcessorService(IMailService mailService, IServiceProvider services) : IInvoiceProcessorService
+public class InvoiceProcessorService(IMailService mailService, IServiceProvider services, ILogger<IInvoiceProcessorService> logger) : IInvoiceProcessorService
 {
     public async Task ProcessInvoiceAsync(InvoiceModel invoiceModel)
     {
-
         List<FlightItemModel> unmatchedFlightItemModels = [];
         List<FlightItemModel> duplicatedFlightItemModels = [];
         List<FlightItemModel> differentPricedFlightItemModels = [];
@@ -19,37 +18,46 @@ public class InvoiceProcessorService(IMailService mailService, IServiceProvider 
             var flightBookingRepository = scope.ServiceProvider.GetRequiredService<IFlightBookingRepository>();
             foreach (var flightItemModel in invoiceModel.FlightItemModels)
             {
-                var carrierNumber = flightItemModel.FlightNumber.Split(" ")[0];
-                var flightNumber = Convert.ToInt32(flightItemModel.FlightNumber.Split(" ")[1]);
-                var bookings = await flightBookingRepository.GetBookingByFlight(flightItemModel.Date, carrierNumber, flightNumber);
-                if (bookings.Count == 0 || bookings.Count < flightItemModel.Seat)
+                try
                 {
-                    unmatchedFlightItemModels.Add(flightItemModel);
+                    var carrierNumber = flightItemModel.FlightNumber.Split(" ")[0];
+                    var flightNumber = Convert.ToInt32(flightItemModel.FlightNumber.Split(" ")[1]);
+                    var bookings = await flightBookingRepository.GetBookingByFlight(flightItemModel.Date, carrierNumber, flightNumber);
+                    if (bookings.Count == 0 || bookings.Count < flightItemModel.Seat)
+                    {
+                        unmatchedFlightItemModels.Add(flightItemModel);
+                    }
+                    else if (bookings.Exists(booking => booking.Price != flightItemModel.SeatPrice))
+                    {
+                        differentPricedFlightItemModels.Add(flightItemModel);
+                    }
+                    else if (bookings.Exists(booking => !booking.InvoiceNumber.IsNullOrEmpty()))
+                    {
+                        duplicatedFlightItemModels.Add(flightItemModel);
+                    }
+                    else
+                    {
+                        matchedFlightItemModels.Add(flightItemModel);
+                        await UpdateBookingInvoiceNumber(bookings, invoiceModel, flightBookingRepository);
+                    }
                 }
-                else if (bookings.Exists(booking => booking.Price != flightItemModel.SeatPrice))
+                catch (Exception e)
                 {
-                    differentPricedFlightItemModels.Add(flightItemModel);
-                }
-                else if (bookings.Exists(booking => !booking.InvoiceNumber.IsNullOrEmpty()))
-                {
-                    duplicatedFlightItemModels.Add(flightItemModel);
-                }
-                else
-                {
-                    matchedFlightItemModels.Add(flightItemModel);
-                    await UpdateBookingInvoiceNumber(bookings, invoiceModel, flightBookingRepository);
+                   logger.LogError("Error occured during process an invoice item, flight number is {FlightNumber}, date is {date}, error message is {message} ", flightItemModel.FlightNumber, flightItemModel.Date, e.Message);
+                   unmatchedFlightItemModels.Add(flightItemModel);
                 }
             }
         }
         await mailService.SendMailAsync(unmatchedFlightItemModels, duplicatedFlightItemModels, differentPricedFlightItemModels, matchedFlightItemModels);
     }
 
-    private static async Task UpdateBookingInvoiceNumber(List<BookingDbModel> bookings, InvoiceModel invoiceModel, IFlightBookingRepository flightBookingRepository)
+    private async Task UpdateBookingInvoiceNumber(List<BookingDbModel> bookings, InvoiceModel invoiceModel, IFlightBookingRepository flightBookingRepository)
     {
         foreach (var booking in bookings)
         {
             booking.InvoiceNumber = invoiceModel.Number;
             await flightBookingRepository.UpdateBookingWithInvoiceAsync(booking);
+            logger.LogInformation("Booking invoice number updated booking id is {BookingId}, invoice number is {InvoiceNumber}", booking.BookingId, booking.InvoiceNumber);
         }
     }
 }

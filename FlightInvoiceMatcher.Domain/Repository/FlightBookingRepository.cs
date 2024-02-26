@@ -13,8 +13,7 @@ public class FlightBookingRepository(FlightBookingDbContext flightBookingDbConte
     }
 
     public Task<List<BookingDbModel>> GetBookingByFlight(DateTime flightDateTime, string flightCarrierCode, int flightNumber)
-    {
-        return flightBookingDbContext.Bookings.Where(booking => booking.FlightDate == flightDateTime && booking.CarrierCode == flightCarrierCode && booking.FlightNumber == flightNumber).ToListAsync();
-    }
+        => flightBookingDbContext.Bookings.Where(booking => booking.FlightDate == flightDateTime && booking.CarrierCode == flightCarrierCode && booking.FlightNumber == flightNumber).ToListAsync();
+
 
 }

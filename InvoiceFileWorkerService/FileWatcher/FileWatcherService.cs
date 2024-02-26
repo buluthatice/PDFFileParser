@@ -39,14 +39,14 @@ public class FileWatcherService : IFileWatcherService
             FileSystemWatcher.IncludeSubdirectories = true;
 
 
-            _logger.LogInformation($"File Watching has started for directory {FileSystemWatcher.Path}");
+            _logger.LogInformation("File Watcher has started for directory {filePath}", FileSystemWatcher.Path);
         }, cancellationToken);
 
     }
 
     private void OnCreateInvoiceFile(object source, FileSystemEventArgs e)
     {
-        _logger.LogInformation($"Come up a new invoice, time to process it file {e.Name}, with path {e.FullPath} has been {e.ChangeType}");
+        _logger.LogInformation("Come up a new invoice, time to process it file {Name}, with path {FullPath} has been {ChangeType}", e.Name, e.FullPath, e.ChangeType);
         var invoiceModel = _invoiceFileReadingService.ExtractInvoiceModelFromPdf(e.FullPath);
         _invoiceProcessorService.ProcessInvoiceAsync(invoiceModel);
     }
